@@ -62,14 +62,19 @@ router.post("/create", async (req, res) => {
 // -------------------------
 // ACCEPT request (Service Man)
 // -------------------------
+// -------------------------
+// ACCEPT request (Service Man)
+// -------------------------
 router.put("/accept/:requestId", async (req, res) => {
   try {
-    let { serviceManId, serviceManLat, serviceManLng } = req.body;
-    let request = await Request.findById(req.params.requestId);
+    const { serviceManId, serviceManLat, serviceManLng } = req.body;
 
+    const request = await Request.findById(req.params.requestId);
     if (!request) return res.status(404).json({ msg: "Request not found" });
-    if (request.status !== "pending")
+
+    if (request.status !== "pending") {
       return res.status(400).json({ msg: "Request is not pending" });
+    }
 
     request.status = "accepted";
     request.serviceMan = serviceManId;
@@ -77,15 +82,23 @@ router.put("/accept/:requestId", async (req, res) => {
     request.serviceManLng = roundTo(serviceManLng, 6);
 
     await request.save();
-    await request.populate("customer", "name mobile latitude longitude");
-    await request.populate("serviceMan", "name mobile");
 
-    res.status(200).json({ msg: "Request accepted successfully", request });
+    // ✅ Populate full serviceman info (with photo)
+    await request.populate([
+      { path: "customer", select: "name mobile latitude longitude" },
+      { path: "serviceMan", select: "name mobile photo" },
+    ]);
+
+    res.status(200).json({
+      msg: "Request accepted successfully",
+      request,
+    });
   } catch (err) {
     console.error("Error in /accept:", err.message);
-    res.status(500).json({ msg: err.message });
+    res.status(500).json({ msg: "Server error: " + err.message });
   }
 });
+
 
 // -------------------------
 // UPDATE Service Man location
@@ -103,8 +116,7 @@ router.put("/update-location/:id", async (req, res) => {
       { new: true }
     );
 
-    if (!request)
-      return res.status(404).json({ error: "Request not found" });
+    if (!request) return res.status(404).json({ error: "Request not found" });
 
     res.json(request);
   } catch (err) {
@@ -129,12 +141,12 @@ router.get("/pending", async (req, res) => {
 });
 
 // -------------------------
-// GET all requests by customer ID
+// GET all requests by customer ID (✅ include serviceman photo)
 // -------------------------
 router.get("/customer/:customerId", async (req, res) => {
   try {
     const requests = await Request.find({ customer: req.params.customerId })
-      .populate("serviceMan", "name mobile serviceManLat serviceManLng")
+      .populate("serviceMan", "name mobile photo") // ✅ include serviceman photo
       .sort({ createdAt: -1 });
 
     res.status(200).json(requests);
@@ -154,7 +166,7 @@ router.get("/active/:serviceManId", async (req, res) => {
       status: { $in: ["accepted", "completed"] },
     })
       .populate("customer", "name mobile latitude longitude")
-      .populate("serviceMan", "name mobile serviceManLat serviceManLng");
+      .populate("serviceMan", "name mobile photo serviceManLat serviceManLng");
 
     if (!request) return res.status(404).json({ msg: "No active request found" });
 
@@ -172,7 +184,7 @@ router.get("/:id", async (req, res) => {
   try {
     const request = await Request.findById(req.params.id)
       .populate("customer", "name mobile latitude longitude")
-      .populate("serviceMan", "name mobile serviceManLat serviceManLng");
+      .populate("serviceMan", "name mobile photo serviceManLat serviceManLng");
 
     if (!request) return res.status(404).json({ msg: "Request not found" });
 
@@ -191,8 +203,7 @@ router.put("/complete/:id", async (req, res) => {
     const { rating, feedback } = req.body;
 
     const request = await Request.findById(req.params.id);
-    if (!request)
-      return res.status(404).json({ message: "Request not found" });
+    if (!request) return res.status(404).json({ message: "Request not found" });
 
     request.status = "completed";
     request.rating = rating;
@@ -212,7 +223,6 @@ router.put("/complete/:id", async (req, res) => {
 // -------------------------
 // CONFIRM completion (Service Man closes task)
 // -------------------------
-// ✅ Service man confirms final completion
 router.put("/confirm-completion/:id", async (req, res) => {
   try {
     const request = await Request.findById(req.params.id);
@@ -237,7 +247,6 @@ router.put("/confirm-completion/:id", async (req, res) => {
   }
 });
 
-
 // -------------------------
 // GET all completed requests (Customer)
 // -------------------------
@@ -247,7 +256,7 @@ router.get("/completed/:customerId", async (req, res) => {
       customer: req.params.customerId,
       status: { $in: ["completed", "closed"] },
     })
-      .populate("serviceMan", "name mobile")
+      .populate("serviceMan", "name mobile photo") // ✅ include photo
       .sort({ updatedAt: -1 });
 
     res.status(200).json(completedRequests);
@@ -260,7 +269,6 @@ router.get("/completed/:customerId", async (req, res) => {
 // -------------------------
 // GET all completed tasks (Service Man)
 // -------------------------
-// ✅ Get all completed or closed requests for a service man
 router.get("/completed-tasks/:serviceManId", async (req, res) => {
   try {
     const requests = await Request.find({
