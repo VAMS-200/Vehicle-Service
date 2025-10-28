@@ -88,7 +88,7 @@ function CustomerDashboard() {
   const fetchRequest = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5001/api/request/customer/${user._id}`
+        `https://vehicle-service-60rr.onrender.com/api/request/customer/${user._id}`
       );
       if (res.data.length > 0) setRequest(res.data[0]);
     } catch (err) {
@@ -118,7 +118,7 @@ function CustomerDashboard() {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
-          const res = await axios.post("http://localhost:5001/api/request/create", {
+          const res = await axios.post("https://vehicle-service-60rr.onrender.com/api/request/create", {
             customer: user._id,
             vehicleType,
             description,
@@ -149,7 +149,7 @@ function CustomerDashboard() {
   const handleFeedbackSubmit = async () => {
     if (!rating) return alert("Please provide a rating!");
     try {
-      await axios.put(`http://localhost:5001/api/request/complete/${request._id}`, {
+      await axios.put(`https://vehicle-service-60rr.onrender.com/api/request/complete/${request._id}`, {
         rating,
         feedback,
       });
@@ -239,7 +239,7 @@ function CustomerDashboard() {
                   <img
                     src={
                       request.serviceMan.photo
-                        ? `http://localhost:5001/${request.serviceMan.photo.replace(/\\/g, "/")}`
+                        ? `https://vehicle-service-60rr.onrender.com/${request.serviceMan.photo.replace(/\\/g, "/")}`
                         : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
                     }
                     alt="Service Man"
@@ -411,7 +411,7 @@ function CustomerDashboard() {
         >
           <div className="relative">
             <img
-              src={`http://localhost:5001/${request.serviceMan.photo.replace(/\\/g, "/")}`}
+              src={`https://vehicle-service-60rr.onrender.com/${request.serviceMan.photo.replace(/\\/g, "/")}`}
               alt="Service Man Full"
               className="max-h-[80vh] max-w-[90vw] object-contain rounded-xl shadow-lg border-4 border-white"
             />
