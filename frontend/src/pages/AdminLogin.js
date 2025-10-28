@@ -13,7 +13,7 @@ function AdminLogin({ setUser }) {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/login", {
+      const res = await axios.post("https://vehicle-service-60rr.onrender.com/api/auth/login", {
         username,
         password,
         role: "admin",
