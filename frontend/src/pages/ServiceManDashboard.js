@@ -81,7 +81,7 @@ const handleLogout = () => {
   // Fetch pending requests
   const fetchPendingRequests = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/request/pending");
+      const res = await axios.get("https://vehicle-service-60rr.onrender.com/api/request/pending");
       setRequests(res.data);
       
     } catch (err) {
@@ -91,7 +91,7 @@ const handleLogout = () => {
 const fetchActiveRequest = async () => {
   try {
     const res = await axios.get(
-      `http://localhost:5001/api/request/active/${user._id}`
+      `https://vehicle-service-60rr.onrender.com/api/request/active/${user._id}`
     );
     setActiveRequest(res.data);
   } catch (err) {
@@ -110,7 +110,7 @@ const fetchActiveRequest = async () => {
     async (pos) => {
       try {
         const res = await axios.put(
-          `http://localhost:5001/api/request/accept/${requestId}`,
+          `https://vehicle-service-60rr.onrender.com/api/request/accept/${requestId}`,
           {
             serviceManId: user._id,
             serviceManLat: pos.coords.latitude,
@@ -120,7 +120,7 @@ const fetchActiveRequest = async () => {
 
         // ✅ Immediately re-fetch the full request with both locations
         const fullReq = await axios.get(
-          `http://localhost:5001/api/request/${requestId}`
+          `https://vehicle-service-60rr.onrender.com/api/request/${requestId}`
         );
 
         alert("Request accepted!");
@@ -140,7 +140,7 @@ const fetchActiveRequest = async () => {
 };
 const handleConfirmCompletion = async (requestId) => {
   try {
-    await axios.put(`http://localhost:5001/api/request/confirm-completion/${requestId}`);
+    await axios.put(`https://vehicle-service-60rr.onrender.com/api/request/confirm-completion/${requestId}`);
     alert("Service completion confirmed!");
 
     // 🚀 Immediately clear the active request so dashboard updates instantly
@@ -161,7 +161,7 @@ const handleConfirmCompletion = async (requestId) => {
       navigator.geolocation.getCurrentPosition(async (pos) => {
         try {
           await axios.put(
-            `http://localhost:5001/api/request/update-location/${requestId}`,
+            `https://vehicle-service-60rr.onrender.com/api/request/update-location/${requestId}`,
             {
               serviceManLat: pos.coords.latitude,
               serviceManLng: pos.coords.longitude,
@@ -180,7 +180,7 @@ const handleConfirmCompletion = async (requestId) => {
     const interval = setInterval(async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5001/api/request/${activeRequest._id}`
+          `https://vehicle-service-60rr.onrender.com/api/request/${activeRequest._id}`
         );
         setActiveRequest(res.data);
 
