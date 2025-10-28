@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5001", // backend URL
+  baseURL: "https://vehicle-service-60rr.onrender.com", // backend URL
   headers: {
     "Content-Type": "application/json", // default for JSON requests
   },
