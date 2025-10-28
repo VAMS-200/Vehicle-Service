@@ -9,7 +9,7 @@ function YourRequests() {
   const fetchCompletedRequests = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5001/api/request/completed/${user._id}`
+        `https://vehicle-service-60rr.onrender.com/api/request/completed/${user._id}`
       );
       setRequests(res.data);
     } catch (err) {
