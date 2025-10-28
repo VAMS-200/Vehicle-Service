@@ -45,7 +45,7 @@ function Register() {
   const sendOtp = async () => {
     if (!formData.mobile) return alert("Enter mobile number first");
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/send-otp", {
+      const res = await axios.post("https://vehicle-service-60rr.onrender.com/api/auth/send-otp", {
         mobile: formData.mobile,
         role: "admin",
       });
@@ -63,7 +63,7 @@ function Register() {
 
   const verifyOtp = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/verify-otp", {
+      const res = await axios.post("https://vehicle-service-60rr.onrender.com/api/auth/verify-otp", {
         mobile: formData.mobile,
         otp,
         role: "admin",
@@ -103,7 +103,7 @@ function Register() {
       }
 
       const res = await axios.post(
-        "http://localhost:5001/api/auth/register",
+        "https://vehicle-service-60rr.onrender.com/api/auth/register",
         data,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
