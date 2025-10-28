@@ -20,7 +20,7 @@ function Login({ setUser }) {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/login", formData);
+      const res = await axios.post("https://vehicle-service-60rr.onrender.com/api/auth/login", formData);
       console.log("Login response:", res.data);
 
       if (res.data.success && res.data.user) {
