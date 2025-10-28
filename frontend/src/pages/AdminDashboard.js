@@ -19,7 +19,7 @@ function AdminDashboard() {
   const fetchServiceMen = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5001/api/admin/getServicemen");
+      const res = await axios.get("https://vehicle-service-60rr.onrender.com/api/admin/getServicemen");
       if (res.data.success) {
         setUsers(res.data.users || []);
       }
@@ -42,7 +42,7 @@ function AdminDashboard() {
     if (!window.confirm("Approve this serviceman’s KYC?")) return;
     try {
       const res = await axios.put(
-        `http://localhost:5001/api/admin/verifyKyc/${id}`,
+        `https://vehicle-service-60rr.onrender.com/api/admin/verifyKyc/${id}`,
         { status: true }
       );
       if (res.data.success) {
@@ -58,7 +58,7 @@ function AdminDashboard() {
     if (!window.confirm("Reject this serviceman’s KYC?")) return;
     try {
       const res = await axios.put(
-        `http://localhost:5001/api/admin/verifyKyc/${id}`,
+        `https://vehicle-service-60rr.onrender.com/api/admin/verifyKyc/${id}`,
         { status: false }
       );
       if (res.data.success) {
@@ -73,7 +73,7 @@ function AdminDashboard() {
   const handleToggleActive = async (id) => {
     try {
       const res = await axios.put(
-        `http://localhost:5001/api/admin/toggleActive/${id}`
+        `https://vehicle-service-60rr.onrender.com/api/admin/toggleActive/${id}`
       );
       if (res.data.success) {
         fetchServiceMen(); // refresh after toggle
@@ -162,12 +162,12 @@ function AdminDashboard() {
                         )}
                         {user.aadhaar && (
                           <a
-                            href={`http://localhost:5001/${user.aadhaar}`}
+                            href={`https://vehicle-service-60rr.onrender.com/${user.aadhaar}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                              src={`http://localhost:5001/${user.aadhaar}`}
+                              src={`https://vehicle-service-60rr.onrender.com/${user.aadhaar}`}
                               alt="Aadhaar"
                               className="w-12 h-12 rounded border border-gray-600 object-cover cursor-pointer"
                             />
@@ -175,12 +175,12 @@ function AdminDashboard() {
                         )}
                         {user.drivingLicense && (
                           <a
-                            href={`http://localhost:5001/${user.drivingLicense}`}
+                            href={`https://vehicle-service-60rr.onrender.com/${user.drivingLicense}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                              src={`http://localhost:5001/${user.drivingLicense}`}
+                              src={`https://vehicle-service-60rr.onrender.com/${user.drivingLicense}`}
                               alt="License"
                               className="w-12 h-12 rounded border border-gray-600 object-cover cursor-pointer"
                             />
